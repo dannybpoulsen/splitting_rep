@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.5//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_5.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+int S = 1000;
+int I = 1;
+int R;
+
+
+double infectRate = 0.789;</declaration>
+	<template>
+		<name>S</name>
+		<location id="id0" x="-272" y="0">
+			<label kind="exponentialrate" x="-282" y="34">infecRate*S*i</label>
+		</location>
+		<init ref="id0"/>
+		<transition id="id1">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-289" y="-127">S&gt; 0</label>
+			<label kind="assignment" x="-289" y="-102">S--,i++</label>
+			<nail x="-306" y="-59"/>
+			<nail x="-204" y="-59"/>
+		</transition>
+	</template>
+	<template>
+		<name>Template1</name>
+		<location id="id2" x="0" y="0">
+		</location>
+		<init ref="id2"/>
+	</template>
+	<template>
+		<name x="5" y="5">Template</name>
+		<declaration>// Place local declarations here.
+</declaration>
+		<location id="id3" x="-714" y="-68">
+		</location>
+		<init ref="id3"/>
+	</template>
+	<system>// Place template instantiations here.
+Process = Template();
+// List one or more processes to be composed into a system.
+system Process;
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+		<query>
+			<formula>simulate 1 [&lt;=100] {S}</formula>
+			<comment/>
+		</query>
+		<query>
+			<formula>simulate 1 [&lt;=100] {S}</formula>
+			<comment/>
+		</query>
+	</queries>
+</nta>
