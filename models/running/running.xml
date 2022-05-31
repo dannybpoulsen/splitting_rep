@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.5//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_5.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+</declaration>
+	<template>
+		<name x="5" y="5">Template</name>
+		<declaration>// Place local declarations here.
+int x = 0;
+clock c;
+
+double level () {
+    return x;
+}</declaration>
+		<location id="id0" x="-365" y="0">
+			<name x="-391" y="8">A</name>
+			<label kind="invariant" x="-374" y="8">c &lt;= 1</label>
+		</location>
+		<location id="id1" x="-272" y="0">
+			<name x="-282" y="-34">B</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id2">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="-391" y="-85">x = x +1,
+ c= 0</label>
+			<nail x="-391" y="-42"/>
+			<nail x="-331" y="-42"/>
+		</transition>
+		<transition id="id3">
+			<source ref="id0"/>
+			<target ref="id1"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Process = Template();
+// List one or more processes to be composed into a system.
+system Process;
+</system>
+	<queries>
+		<query>
+			<formula>Pr[&lt;=100] (&lt;&gt;) levels Process.level () {1,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100}</formula>
+			<comment/>
+			<result outcome="success" type="quantity" value="2.96732e-32" timestamp="2022-05-30 14:01:36 +0200">
+				<details>2.96732e-32</details>
+				<plot title="Probability Density Distribution" xaxis="Run length" yaxis="probability density">
+					<series title="density" type="b(0.666259)" color="0x0000ff" encoding="csv">50.37049651894169,0.7504587485964105
+51.03675565834829,0.7504587485964105
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">51.03675565834828,0.0
+51.03675565834828,0.7504587485964105
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=0.66626, bucket count=2
+Runs: 2 in total, 2 (100%) displayed, 0 (0%) remaining
+Displayed sample set: { 51.7, 50.37 }
+Mean estimate of displayed sample: 51.04 ± 8.466 (95% CI)</comment>
+				</plot>
+				<plot title="Probability Distribution" xaxis="Run length" yaxis="probability">
+					<series title="probability" type="b(0.666259)" color="0x0000ff" encoding="csv">50.37049651894169,0.5
+51.03675565834829,0.5
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">51.03675565834828,0.0
+51.03675565834828,0.5
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=0.66626, bucket count=2
+Runs: 2 in total, 2 (100%) displayed, 0 (0%) remaining
+Displayed sample set: { 51.7, 50.37 }
+Mean estimate of displayed sample: 51.04 ± 8.466 (95% CI)</comment>
+				</plot>
+				<plot title="Cumulative Probability Distribution" xaxis="Run length" yaxis="probability">
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">50.37049651894169,0.0
+51.03675565834829,0.5
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">51.03675565834828,0.0
+51.03675565834828,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=0.66626, bucket count=2
+Runs: 2 in total, 2 (100%) displayed, 0 (0%) remaining
+Displayed sample set: { 51.7, 50.37 }
+Mean estimate of displayed sample: 51.04 ± 8.466 (95% CI)</comment>
+				</plot>
+				<plot title="Cumulative Probability Confidence Intervals" xaxis="Run length" yaxis="probability">
+					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">50.37049651894169,0.841886116991581
+51.03675565834829,0.9874208829065749
+					</series>
+					<series title="upper limit" type="k" color="0xdd0000" encoding="csv">50.37049651894169,0.0
+51.03675565834829,0.01257911709342505
+					</series>
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">50.37049651894169,0.0
+51.03675565834829,0.5
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">51.03675565834828,0.0
+51.03675565834828,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=0.66626, bucket count=2
+Runs: 2 in total, 2 (100%) displayed, 0 (0%) remaining
+Displayed sample set: { 51.7, 50.37 }
+Mean estimate of displayed sample: 51.04 ± 8.466 (95% CI)</comment>
+				</plot>
+				<plot title="Frequency Histogram" xaxis="Run length" yaxis="count">
+					<series title="count" type="b(0.666259)" color="0x0000ff" encoding="csv">50.37049651894169,1.0
+51.03675565834829,1.0
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">51.03675565834828,0.0
+51.03675565834828,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=0.66626, bucket count=2
+Runs: 2 in total, 2 (100%) displayed, 0 (0%) remaining
+Displayed sample set: { 51.7, 50.37 }
+Mean estimate of displayed sample: 51.04 ± 8.466 (95% CI)</comment>
+				</plot>
+			</result>
+		</query>
+	</queries>
+</nta>
