@@ -7,6 +7,7 @@ import os
 import sys
 import multiprocessing
 import pyparsing as pp
+import time
 
 
 class Progresser:
@@ -128,8 +129,13 @@ class Uppaal:
             modelpath = self.__setupDirectory (tmpdir,xmlmodel)
             binarypath = os.path.join (self._uppaalpath,"bin","verifyta")
             params = [binarypath,"-s","-q"]+options+[modelpath,querypath]
+            starttime = time.perf_counter ()
             res = subprocess.run (params,cwd = tmpdir,capture_output=True)
+            endtime = time.perf_counter ()
+            self._elapsed = endtime - starttime
             return pp (tmpdir,res.stdout)
         
-        
+
+    def elapsed (self):
+        return self._elapsed
         
