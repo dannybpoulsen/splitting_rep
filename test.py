@@ -17,10 +17,16 @@ jobshopgroup.add_argument('--jobshop.enable',  dest="jobshop_enable",action="sto
 jobshopgroup.add_argument('--jobshop.effort',  type=int, dest="jobshop_effort",default=20,)
 jobshopgroup.add_argument('--jobshop.offspring', type=int, dest="jobshop_offspring",default=20,)
 
-jobshopgroup = parser.add_argument_group ("Running Case")
-jobshopgroup.add_argument('--running.enable',  dest="running_enable",action="store_true",default=False,)
-jobshopgroup.add_argument('--running.effort',  type=int, dest="running_effort",default=20,)
-jobshopgroup.add_argument('--running.offspring', type=int, dest="running_offspring",default=20,)
+runninggroup = parser.add_argument_group ("Running Case")
+runninggroup.add_argument('--running.enable',  dest="running_enable",action="store_true",default=False,)
+runninggroup.add_argument('--running.effort',  type=int, dest="running_effort",default=20,)
+runninggroup.add_argument('--running.offspring', type=int, dest="running_offspring",default=20,)
+
+covidgroup = parser.add_argument_group ("Covid Simulation Case")
+covidgroup.add_argument('--covidsim.enable',  dest="covidsim_enable",action="store_true",default=False,)
+covid2group = parser.add_argument_group ("Covid Estimation")
+covid2group.add_argument('--covidestim.enable',  dest="covidestim_enable",action="store_true",default=False,)
+
 
 
 args = parser.parse_args ()
@@ -37,6 +43,12 @@ if args.jobshop_enable:
 
 if args.running_enable:
     jobs.append (experiments.RunningAllAlgo (outputer,uppaal,effort = args.running_effort,offspring = args.running_offspring,progresser = progresser))
+
+if args.covidsim_enable:
+    jobs.append (experiments.CovidSimulate (outputer,uppaal,progresser = progresser))
+
+if args.covidestim_enable:
+    jobs.append (experiments.CovidAdaptive (outputer,uppaal,progresser = progresser))
 
 
 

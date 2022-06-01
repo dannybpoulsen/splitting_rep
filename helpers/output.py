@@ -11,10 +11,13 @@ class OutputLocation:
 
     def outputPath (self,path):
         return os.path.join (self._path,path)
-    
+
+    def getDestination (self):
+        return self._path
     
     def subLocation (self,path):
         loc = os.path.join (self._path,path)
         return OutputLocation (loc)
 
+    
     

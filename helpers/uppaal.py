@@ -21,6 +21,7 @@ class Progresser:
     def message (self,string):
         sys.stdout.write ("\r\u001b[0J{0}".format(string))
 
+        
 
 class EstimResult:
     def __init__ (self,
@@ -51,7 +52,38 @@ class EstimResult:
     def getHistogram (self):
         return self._histogram
 
+
+class parseSamplingLog :
+    def __init__(self,trajectories):
+        self._trajectories = trajectories
     
+    def __call__ (self,tmpdir,stdout):
+        actualTraj = ["time"]+self._trajectories
+        datas  =[]
+        def newcur ():
+            dic = {}
+            for i in actualTraj:
+                dic[i] = []
+            return dic
+
+        path = os.path.join (tmpdir,"sampling.log")
+
+        if not os.path.exists (path):
+            return []
+
+        with open (path,'r') as inpfile:
+            cur = newcur ()
+            oldtime = 0
+            for l in inpfile:
+                for i,k in zip(actualTraj,l.strip().split (" ")):
+                    if i == "time":
+                        if oldtime > float(k):
+                            datas.append (cur)
+                            cur = newcur ()
+                        oldtime = float(k)
+                    cur[i].append(float(k))
+            datas.append(cur)
+        return datas
 
 def parsePlot (line):
     interval = (pp.Literal ("[") + pp.pyparsing_common.number + pp.Literal (",") + pp.pyparsing_common.number + pp.Literal ("]")).setParseAction ( lambda s,l,t: (t[1],t[3]))
@@ -90,6 +122,7 @@ def parseLevelData (lines):
         yield parser.parseString (l)[0]
 
 def parseEstim (tmpdir,stdout):
+    print (stdout)
     lines = [r for r in stdout.decode().split('\n') if r != ""]
     
     if "Formula is satisfied" in stdout.decode ():
@@ -118,7 +151,7 @@ class Uppaal:
                     
 
             
-    def runVerification (self,xmlmodel, query,postprocess = None,options = []):
+    def runVerification (self,xmlmodel, query,postprocess = None,options = [],env = {}):
         pp = postprocess or justPrint
         with tempfile.TemporaryDirectory() as tmpdir:
 
@@ -130,9 +163,10 @@ class Uppaal:
             binarypath = os.path.join (self._uppaalpath,"bin","verifyta")
             params = [binarypath,"-s","-q"]+options+[modelpath,querypath]
             starttime = time.perf_counter ()
-            res = subprocess.run (params,cwd = tmpdir,capture_output=True)
+            res = subprocess.run (params,cwd = tmpdir,capture_output=True,env = env)
             endtime = time.perf_counter ()
             self._elapsed = endtime - starttime
+            print (res.stderr)
             return pp (tmpdir,res.stdout)
         
 

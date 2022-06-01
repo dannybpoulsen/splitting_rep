@@ -1,5 +1,5 @@
 import importlib.resources
-import models.JobShop
+import models.running
 import helpers.uppaal
 import tabulate
 import json
@@ -18,7 +18,7 @@ class RunningCore:
                  progresser = None):
         self._outputloc = outputloc.subLocation (prefix or "JobShop")
         self._uppaal = uppaal
-        self._model = importlib.resources.read_text (models.JobShop,"JobShop.xml")
+        self._model = importlib.resources.read_text (models.running,"running.xml")
         self._effort = effort
         self._offspring = offspring
         self._progresser = progresser
@@ -27,7 +27,7 @@ class RunningCore:
     def _runFixedEffort (self,model,jobs,effort = 20):
         ll =  list (range (1,jobs,1))
         ll.append(jobs+1)
-        query = f"Pr[<={jobs*5+1}] (<>) levels level() {{ {','.join ([str(i) for i in ll])} }}"
+        query = f"Pr[<={jobs*5+1}] (<>) levels Process.level() {{ {','.join ([str(i) for i in ll])} }}"
         options = ["--splitting.algorithm","0","--splitting.effort",f"{effort}"]
         return self._uppaal.runVerification (model,query,options=options,postprocess = helpers.uppaal.parseEstim)
     
@@ -35,13 +35,13 @@ class RunningCore:
     def _runFixedSplitting (self,model,jobs,offspring = 20,effort = 20):
         ll =  list (range (1,jobs,1))
         ll.append(jobs+1)
-        query = f"Pr[<={jobs*5+1}] (<>) levels level() {{ {','.join ([str(i) for i in ll])} }}"
+        query = f"Pr[<={jobs*5+1}] (<>) levels Process.level() {{ {','.join ([str(i) for i in ll])} }}"
         options = ["--splitting.algorithm","1","--splitting.offspring",f"{offspring}","--splitting.start_effort",f"{effort}"]
         
         return self._uppaal.runVerification (model,query,options=options,postprocess = helpers.uppaal.parseEstim)
     
     def _runAdaptive (self,model,jobs):
-        query = f"Pr[<={jobs*5+1}] (<>) adaptive level() -> Jobs+1"
+        query = f"Pr[<={jobs*5+1}] (<>) adaptive Process.level() -> {jobs}"
         return self._uppaal.runVerification (model,query,postprocess = helpers.uppaal.parseEstim)
     
     
