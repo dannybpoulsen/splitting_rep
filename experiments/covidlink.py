@@ -117,9 +117,9 @@ class CovidAdaptive(Covid):
                 "UPPAAL_SPLITTING_API" : str(libloc)
         }
         options = [
-            "--splitting.adaptive.effort","1000",
-            "--splitting.adaptive.retain","100"]
-        query = f"Pr[<=100] (<>) adaptive I_d () -> {self._limit}"
+            "--splitting.adaptive.effort","100",
+            "--splitting.adaptive.retain","50"]
+        query = f"Pr[<=250] (<>) adaptive I_d () -> {self._limit}"
         ad_prob,level_data = self._uppaal.runVerification (model,query,helpers.uppaal.parseEstim, options=options,  env = env)
         with self._outputloc.outputFile ("summary.json") as outfile:
             levels  = [

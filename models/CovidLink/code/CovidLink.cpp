@@ -240,10 +240,21 @@ extern "C" {
 void SEIRCounter::recvMessage(const Covid::Messaging::Message& m)
 {
   auto& data = gstate.data->stats;
-  if (m.type == Covid::Messaging::MessageType::InitHealth ||
-      m.type == Covid::Messaging::MessageType::HealthChange) {
+
+  if (const Covid::Messaging::HealthInit* init = std::get_if<Covid::Messaging::HealthInit> (&m.data)) {
     
-    switch (m.data.healthdata.nstate) {
+    switch (init->state) {
+     case Covid::World::Status::Susceptible:  data.currentS++; break;
+    case Covid::World::Status::Exposed: data.currentE++; break;
+    case Covid::World::Status::Infectious: data.currentI++; break;
+    case Covid::World::Status::Recovered: data.currentR++; break;
+    case Covid::World::Status::Vaccinated: data.currentV++; break;
+    case Covid::World::Status::Hospitalised: data.currentH++; break;
+    }
+  }
+
+  else if (const Covid::Messaging::HealthChange* init = std::get_if<Covid::Messaging::HealthChange> (&m.data))  {
+    switch (init->nstate) {
     case Covid::World::Status::Susceptible:  data.currentS++; break;
     case Covid::World::Status::Exposed: data.currentE++; break;
     case Covid::World::Status::Infectious: data.currentI++; break;
@@ -252,15 +263,19 @@ void SEIRCounter::recvMessage(const Covid::Messaging::Message& m)
     case Covid::World::Status::Hospitalised: data.currentH++; break;
     }
     
-    if (m.type == Covid::Messaging::MessageType::HealthChange) {
-      switch (m.data.healthdata.ostate) {
-      case Covid::World::Status::Susceptible: data.currentS--; break;
-      case Covid::World::Status::Exposed: data.currentE--; break;
-      case Covid::World::Status::Infectious: data.currentI--; break;
-      case Covid::World::Status::Recovered: data.currentR--; break;
-      case Covid::World::Status::Vaccinated: data.currentV--; break;
-      case Covid::World::Status::Hospitalised: data.currentH--; break;
-      }
+    switch (init->ostate) {
+    case Covid::World::Status::Susceptible: data.currentS--; break;
+    case Covid::World::Status::Exposed: data.currentE--; break;
+    case Covid::World::Status::Infectious: data.currentI--; break;
+    case Covid::World::Status::Recovered: data.currentR--; break;
+    case Covid::World::Status::Vaccinated: data.currentV--; break;
+    case Covid::World::Status::Hospitalised: data.currentH--; break;
     }
+    
   }
+    
 }
+ 
+    
+    
+

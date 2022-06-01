@@ -26,6 +26,7 @@ covidgroup = parser.add_argument_group ("Covid Simulation Case")
 covidgroup.add_argument('--covidsim.enable',  dest="covidsim_enable",action="store_true",default=False,)
 covid2group = parser.add_argument_group ("Covid Estimation")
 covid2group.add_argument('--covidestim.enable',  dest="covidestim_enable",action="store_true",default=False,)
+jobshopgroup.add_argument('--covidestim.limit', type=int, dest="covidestim_limit",default=1000,)
 
 
 
@@ -48,7 +49,7 @@ if args.covidsim_enable:
     jobs.append (experiments.CovidSimulate (outputer,uppaal,progresser = progresser))
 
 if args.covidestim_enable:
-    jobs.append (experiments.CovidAdaptive (outputer,uppaal,progresser = progresser))
+    jobs.append (experiments.CovidAdaptive (outputer,uppaal,progresser = progresser,limit = args.covidestim_limit))
 
 
 

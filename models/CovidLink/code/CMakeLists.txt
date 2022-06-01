@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 20)
 include (FetchContent)
 FetchContent_Declare(covidsim
         GIT_REPOSITORY git@github.com:dannybpoulsen/covidsim.git
-	GIT_TAG 5ec3ea88e1a7873e9074168bd0d4e8fd653b4640
+	GIT_TAG 6f669a3b2a79df43593f5a239b20e5bed339c374
 )
 
 FetchContent_MakeAvailable(covidsim)
