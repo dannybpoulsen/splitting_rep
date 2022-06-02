@@ -138,7 +138,7 @@ struct GlobalState {
      hparam->enableStrand<Covid::World::Variant::Alpha> ();
 
      
-     Covid::Behavior::Health::CovidParam<Covid::World::Variant::Alpha>::setBeta (0.5);
+     Covid::Behavior::Health::CovidParam<Covid::World::Variant::Alpha>::setBeta (0.789);
      Covid::Behavior::Health::CovidParam<Covid::World::Variant::Alpha>::setAsymp (0.8);
      
      
@@ -146,7 +146,8 @@ struct GlobalState {
      auto hinit = std::make_unique<Covid::Behavior::Health::UniformHealthInitialiser>(0.01, 0);
      simulator.makeBehaviour<Covid::Behavior::Health::HealthLocationImpl>(std::move(hparam),
 									  std::move(venue_selector),
-									  std::move(hinit));
+									  std::move(hinit),
+									  true);
      
      simulator.makeBehaviour<Covid::Behavior::ExponentialWaiting<Covid::World::Variant::Alpha>>(
 												Covid::Core::Time{}, Covid::Core::Time{}.add({0,1,0,0}), 3);

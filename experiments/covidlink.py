@@ -62,7 +62,7 @@ class CovidSimulate(Covid):
         traj = ["S","E","I","R","H","V"]
         parser = helpers.uppaal.parseSamplingLog (traj)
         inp = ",".join ([f"{n}()" for n in traj])
-        query = f"simulate {self._simulations} [<=250] {{ {inp} }}"
+        query = f"simulate {self._simulations} [<=100] {{ {inp} }}"
         options = ["-F","0.25","-O","csv"]
         res = self._uppaal.runVerification (model,query,parser, options= options, env = env)
 
@@ -119,7 +119,7 @@ class CovidAdaptive(Covid):
         options = [
             "--splitting.adaptive.effort","100",
             "--splitting.adaptive.retain","50"]
-        query = f"Pr[<=250] (<>) adaptive I_d () -> {self._limit}"
+        query = f"Pr[<=100] (<>) adaptive I_d () -> {self._limit}"
         ad_prob,level_data = self._uppaal.runVerification (model,query,helpers.uppaal.parseEstim, options=options,  env = env)
         with self._outputloc.outputFile ("summary.json") as outfile:
             levels  = [
