@@ -26,6 +26,7 @@
 #include <fstream>
 #include <type_traits>
 #include <vector>
+#include <unordered_map>
 
 struct Statistics
 {
@@ -128,7 +129,7 @@ struct GlobalState {
 								       .agents = 10000,
 								       .homes = 100,
 								       .schools =100,
-								       .leisure = 1000}),
+								       .leisure = 100}),
 			      Covid::Core::Time{}
 			      
 			      ){
@@ -160,7 +161,8 @@ struct GlobalState {
   Simulator simulator;
   std::unique_ptr<SimData> data;
 
-  std::vector<std::unique_ptr<SimData>>  storage;
+  std::unordered_map<int32_t,std::unique_ptr<SimData>>  storage;
+  int32_t next_state{0};
 };
 
 static GlobalState gstate{};
@@ -204,25 +206,28 @@ extern "C" {
 //Upppaal Splitting API  
 extern "C" {  
   int32_t uppaal_store_state () {
-    auto val = gstate.storage.size ();
-    gstate.storage.push_back (std::make_unique<SimData> (*gstate.data));
-    return val;
+    gstate.storage.emplace  (++gstate.next_state,std::make_unique<SimData> (*gstate.data));
+    return gstate.next_state;
   }
 
   //return 0 if fail, 1 if success
-  int32_t uppaal_recall_state (int32_t res) {
-    if (res >= gstate.storage.size () || res < 0)
-      return 0;
-    
+  int32_t uppaal_recall_state (int32_t res) {  
     gstate.data = std::make_unique<SimData> (*gstate.storage.at (res));
     
     return 1;
   }
 
-  void uppaal_reset (void) {
+  void uppaal_delete_state (int32_t res) {
+    gstate.storage.erase (gstate.storage.find(res));
+  }
+  
+  void uppaal_reset () {
     gstate.storage.clear ();
     gstate.simulator.startSim ();
+    gstate.next_state = 0;
   }
+  
+  
   
   /*void step () {
     gstate.simulator.stepSim (*gstate.data);

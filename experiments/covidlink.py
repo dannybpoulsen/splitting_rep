@@ -11,8 +11,6 @@ from matplotlib import pyplot as plt
 from statistics import mean
 from statistics import stdev
 
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 
 
@@ -48,7 +46,7 @@ class CovidSimulate(Covid):
                  outputloc,
                  uppaal,
                  progresser = None,
-                 simulations = 1
+                 simulations = 20
                  ):
         super().__init__(outputloc,uppaal,"CovidSimulation",progresser)
         self._simulations = simulations
@@ -59,7 +57,7 @@ class CovidSimulate(Covid):
         env = { "LD_PRELOAD" : "/usr/lib/libasan.so",
                 "UPPAAL_SPLITTING_API" : str(libloc)
         }
-        traj = ["S","E","I","R","H","V"]
+        traj = ["E","H"] # ["S","E","I","R","H","V"]
         parser = helpers.uppaal.parseSamplingLog (traj)
         inp = ",".join ([f"{n}()" for n in traj])
         query = f"simulate {self._simulations} [<=100] {{ {inp} }}"

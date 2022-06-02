@@ -122,7 +122,6 @@ def parseLevelData (lines):
         yield parser.parseString (l)[0]
 
 def parseEstim (tmpdir,stdout):
-    print (stdout)
     lines = [r for r in stdout.decode().split('\n') if r != ""]
     
     if "Formula is satisfied" in stdout.decode ():
@@ -166,7 +165,7 @@ class Uppaal:
             res = subprocess.run (params,cwd = tmpdir,capture_output=True,env = env)
             endtime = time.perf_counter ()
             self._elapsed = endtime - starttime
-            print (res.stderr)
+            print (res.stderr.decode())
             return pp (tmpdir,res.stdout)
         
 
