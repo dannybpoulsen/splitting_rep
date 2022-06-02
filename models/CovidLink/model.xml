@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.5//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_5.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+const int INT32_MIN = -2147483648; 
+const int INT32_MAX = 2147483647;
+
+typedef int[INT32_MIN,INT32_MAX] int32_t;
+
+import "#COVIDPATH#" {
+    int32_t I ();
+    int32_t S ();
+    int32_t E ();
+    int32_t R ();
+    int32_t H ();
+    int32_t V ();
+    void step ();
+    void initialise_simulation ();
+};
+
+double H_d () {
+    return 1.0*H();
+}
+
+double I_d () {
+    return 1.0*I();
+}
+
+clock hours;
+clock days;
+
+int steps = 0;
+
+urgent broadcast chan urg;
+
+const int reach = 2000;
+
+double decay() {
+    return pow (0.5,days / (44/2));
+}
+
+double level () {
+     return I()*1.0;
+}</declaration>
+	<template>
+		<name x="5" y="5">Template</name>
+		<declaration>// Place local declarations here.
+
+</declaration>
+		<location id="id0" x="-8" y="0">
+			<name x="-51" y="8">Live</name>
+			<label kind="invariant" x="-238" y="34">hours &lt;= 4 &amp;&amp; hours'==24</label>
+		</location>
+		<location id="id1" x="-306" y="0">
+			<committed/>
+		</location>
+		<init ref="id1"/>
+		<transition id="id2">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="-272" y="8">initialise_simulation ()</label>
+		</transition>
+		<transition id="id3">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-50" y="-136">hours &gt;= 4</label>
+			<label kind="assignment" x="-50" y="-119">step (),hours = 0,steps++</label>
+			<nail x="-59" y="-76"/>
+			<nail x="17" y="-76"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Process = Template();
+// List one or more processes to be composed into a system.
+system Process;
+</system>
+	<queries>
+		<query>
+			<formula>Pr[&lt;=50] (&lt;&gt; true) adaptiv level () -&gt; reach</formula>
+			<comment/>
+		</query>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+		<query>
+			<formula>simulate 1 [&lt;=50] {level ()}</formula>
+			<comment/>
+		</query>
+	</queries>
+</nta>
